@@ -17,7 +17,8 @@
  * under the License.
  */
 
-package org.killbill.billing.plugin.helloworld;
+package org.killbill.billing.plugin.hyperswitch;
+
 
 import java.util.Hashtable;
 import java.util.Properties;
@@ -36,58 +37,55 @@ import org.killbill.billing.plugin.api.notification.PluginConfigurationEventHand
 import org.killbill.billing.plugin.core.config.PluginEnvironmentConfig;
 import org.killbill.billing.plugin.core.resources.jooby.PluginApp;
 import org.killbill.billing.plugin.core.resources.jooby.PluginAppBuilder;
+import org.killbill.billing.plugin.hyperswitch.dao.HyperswitchDao;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class HelloWorldActivator extends KillbillActivatorBase {
+public class HyperswitchActivator extends KillbillActivatorBase {
+    private static final Logger logger = LoggerFactory.getLogger(HyperswitchActivator.class);
+    public static final String PLUGIN_NAME = "hyperswitch-plugin";
 
-    //
-    // Ideally that string should match the pluginName on the filesystem, but there
-    // is no enforcement
-    //
-    public static final String PLUGIN_NAME = "hello-world-plugin";
-
-    private HelloWorldConfigurationHandler helloWorldConfigurationHandler;
+    private HyperswitchConfigurationHandler hyperswitchConfigurationHandler;
     private OSGIKillbillEventDispatcher.OSGIKillbillEventHandler killbillEventHandler;
-    private MetricsGeneratorExample metricsGenerator;
 
     @Override
     public void start(final BundleContext context) throws Exception {
         super.start(context);
 
         final String region = PluginEnvironmentConfig.getRegion(configProperties.getProperties());
-
+        final HyperswitchDao hyperswitchDao = new HyperswitchDao(dataSource.getDataSource());
+        logger.info(" starting plugin {}", PLUGIN_NAME);
         // Register an event listener for plugin configuration (optional)
-        helloWorldConfigurationHandler = new HelloWorldConfigurationHandler(region, PLUGIN_NAME, killbillAPI);
-        final Properties globalConfiguration = helloWorldConfigurationHandler
+        logger.info("Registering an event listener for plugin configuration");
+        hyperswitchConfigurationHandler = new HyperswitchConfigurationHandler(region, PLUGIN_NAME, killbillAPI);
+        final HyperswitchConfigProperties globalConfiguration = hyperswitchConfigurationHandler
                 .createConfigurable(configProperties.getProperties());
-        helloWorldConfigurationHandler.setDefaultConfigurable(globalConfiguration);
-
+        hyperswitchConfigurationHandler.setDefaultConfigurable(globalConfiguration);
         // Register an event listener (optional)
-        killbillEventHandler = new HelloWorldListener(killbillAPI);
+        killbillEventHandler = new HyperswitchListener(killbillAPI);
 
         // As an example, this plugin registers a PaymentPluginApi (this could be
         // changed to any other plugin api)
-        final PaymentPluginApi paymentPluginApi = new HelloWorldPaymentPluginApi();
+        logger.info("Registering an APIs");
+        final PaymentPluginApi paymentPluginApi = new HyperswitchPaymentPluginApi(hyperswitchConfigurationHandler,killbillAPI,configProperties,clock.getClock(),hyperswitchDao);
         registerPaymentPluginApi(context, paymentPluginApi);
 
-        // Expose metrics (optional)
-        metricsGenerator = new MetricsGeneratorExample(metricRegistry);
-        metricsGenerator.start();
-
+        logger.info("Registering healthcheck");
         // Expose a healthcheck (optional), so other plugins can check on the plugin status
-        final Healthcheck healthcheck = new HelloWorldHealthcheck();
+        final Healthcheck healthcheck = new HyperswitchHealthcheck();
         registerHealthcheck(context, healthcheck);
 
-        // This Plugin registers a InvoicePluginApi
-        final InvoicePluginApi invoicePluginApi = new HelloWorldInvoicePluginApi(killbillAPI, configProperties, null);
-        registerInvoicePluginApi(context, invoicePluginApi);
+        // // This Plugin registers a InvoicePluginApi
+        // final InvoicePluginApi invoicePluginApi = new HyperswitchInvoicePluginApi(killbillAPI, configProperties, null);
+        // registerInvoicePluginApi(context, invoicePluginApi);
 
         // Register a servlet (optional)
-        final PluginApp pluginApp = new PluginAppBuilder(PLUGIN_NAME, killbillAPI, dataSource, super.clock,
-                                                         configProperties).withRouteClass(HelloWorldServlet.class)
-                                                                          .withRouteClass(HelloWorldHealthcheckServlet.class).withService(healthcheck).build();
-        final HttpServlet httpServlet = PluginApp.createServlet(pluginApp);
-        registerServlet(context, httpServlet);
+        // final PluginApp pluginApp = new PluginAppBuilder(PLUGIN_NAME, killbillAPI, dataSource, super.clock,
+        //                                                  configProperties).withRouteClass(HyperswitchServlet.class)
+        //                                                                   .withRouteClass(HyperswitchHealthcheckServlet.class).withService(healthcheck).build();
+        // final HttpServlet httpServlet = PluginApp.createServlet(pluginApp);
+        // registerServlet(context, httpServlet);
 
         registerHandlers();
     }
@@ -95,34 +93,21 @@ public class HelloWorldActivator extends KillbillActivatorBase {
     @Override
     public void stop(final BundleContext context) throws Exception {
         // Do additional work on shutdown (optional)
-        metricsGenerator.stop();
         super.stop(context);
     }
 
     private void registerHandlers() {
         final PluginConfigurationEventHandler configHandler = new PluginConfigurationEventHandler(
-                helloWorldConfigurationHandler);
+                hyperswitchConfigurationHandler);
 
         dispatcher.registerEventHandlers(configHandler,
                                          (OSGIFrameworkEventHandler) () -> dispatcher.registerEventHandlers(killbillEventHandler));
-    }
-
-    private void registerServlet(final BundleContext context, final Servlet servlet) {
-        final Hashtable<String, String> props = new Hashtable<String, String>();
-        props.put(OSGIPluginProperties.PLUGIN_NAME_PROP, PLUGIN_NAME);
-        registrar.registerService(context, Servlet.class, servlet, props);
     }
 
     private void registerPaymentPluginApi(final BundleContext context, final PaymentPluginApi api) {
         final Hashtable<String, String> props = new Hashtable<String, String>();
         props.put(OSGIPluginProperties.PLUGIN_NAME_PROP, PLUGIN_NAME);
         registrar.registerService(context, PaymentPluginApi.class, api, props);
-    }
-
-    private void registerInvoicePluginApi(final BundleContext context, final InvoicePluginApi api) {
-        final Hashtable<String, String> props = new Hashtable<String, String>();
-        props.put(OSGIPluginProperties.PLUGIN_NAME_PROP, PLUGIN_NAME);
-        registrar.registerService(context, InvoicePluginApi.class, api, props);
     }
 
     private void registerHealthcheck(final BundleContext context, final Healthcheck healthcheck) {

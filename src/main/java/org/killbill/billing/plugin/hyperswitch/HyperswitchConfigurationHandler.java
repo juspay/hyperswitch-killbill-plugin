@@ -17,17 +17,20 @@
  * under the License.
  */
 
-package org.killbill.billing.plugin.helloworld;
+package org.killbill.billing.plugin.hyperswitch;
 
 import java.util.Properties;
 
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
+
 import org.killbill.billing.plugin.api.notification.PluginTenantConfigurableConfigurationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * When per-tenant config changes are made, the plugin automatically gets notified (and prints a log trace)
+ * When per-tenant config changes are made, the plugin automatically gets
+ * notified (and prints a log trace)
+ * 
  * <pre>
  * {@code
  * curl -v \
@@ -43,22 +46,21 @@ import org.slf4j.LoggerFactory;
  * }
  * </pre>
  */
-public class HelloWorldConfigurationHandler extends PluginTenantConfigurableConfigurationHandler<Properties> {
+public class HyperswitchConfigurationHandler extends PluginTenantConfigurableConfigurationHandler<HyperswitchConfigProperties> {
 
-    private static final Logger logger = LoggerFactory.getLogger(HelloWorldConfigurationHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(HyperswitchConfigurationHandler.class);
 
     private final String region;
 
-    public HelloWorldConfigurationHandler(final String region,
-                                          final String pluginName,
-                                          final OSGIKillbillAPI osgiKillbillAPI) {
+    public HyperswitchConfigurationHandler(final String region,
+            final String pluginName,
+            final OSGIKillbillAPI osgiKillbillAPI) {
         super(pluginName, osgiKillbillAPI);
         this.region = region;
     }
 
     @Override
-    protected Properties createConfigurable(final Properties properties) {
-        logger.info("New properties for region {}: {}", region, properties);
-        return properties;
+    protected HyperswitchConfigProperties createConfigurable(final Properties properties) {
+        return new HyperswitchConfigProperties(properties,region);
     }
 }

@@ -25,20 +25,20 @@
         <version>0.146.6</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
-    <artifactId>hello-world-plugin</artifactId>
+    <artifactId>hyperswitch-plugin</artifactId>
     <version>2.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Kill Bill OSGI Hello World bundle</name>
     <description>Kill Bill Hello World plugin</description>
-    <url>http://github.com/killbill/killbill-hello-world-java-plugin</url>
+    <url>https://github.com/srujanchikke/hyperswitchplugin</url>
     <scm>
-        <connection>scm:git:git://github.com/killbill/killbill-hello-world-java-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:killbill/killbill-hello-world-java-plugin.git</developerConnection>
-        <url>http://github.com/killbill/killbill-hello-world-java-plugin/tree/master</url>
+        <connection>scm:git@github.com:srujanchikke/hyperswitchplugin.git</connection>
+        <developerConnection>scm:git@github.com:srujanchikke/hyperswitchplugin.git</developerConnection>
+        <url>https://github.com/srujanchikke/hyperswitchplugin</url>
     </scm>
     <issueManagement>
         <system>Github</system>
-        <url>https://github.com/killbill/killbill-hello-world-java-plugin/issues</url>
+        <url>https://github.com/srujanchikke/hyperswitchplugin/issues</url>
     </issueManagement>
     <properties>
         <check.skip-dependency>true</check.skip-dependency>
@@ -48,7 +48,12 @@
         <check.skip-enforcer>true</check.skip-enforcer>
         <check.skip-rat>true</check.skip-rat>
         <check.skip-spotbugs>true</check.skip-spotbugs>
-        <osgi.private>org.killbill.billing.plugin.helloworld.*</osgi.private>
+        <!-- <osgi.extra-import>com.hyperswitch.client.model.PaymentsResponse,
+            com.hyperswitch.client.HsApiClient,
+            com.hyperswitch.client.api.PaymentsApi,
+            com.hyperswitch.client.model.PaymentsCreateRequest,
+            com.hyperswitch.client.model.Currency,</osgi.extra-import> -->
+        <osgi.private>org.killbill.billing.plugin.hyperswitch.*</osgi.private>
     </properties>
     <dependencies>
         <dependency>
@@ -62,6 +67,11 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.juspay.hyperswitch</groupId>
+            <artifactId>hyperswitch-java-client</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>

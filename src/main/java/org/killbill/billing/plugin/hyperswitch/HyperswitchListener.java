@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.killbill.billing.plugin.helloworld;
+package org.killbill.billing.plugin.hyperswitch;
 
 import org.killbill.billing.account.api.Account;
 import org.killbill.billing.account.api.AccountApiException;
@@ -29,13 +29,13 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HelloWorldListener implements OSGIKillbillEventDispatcher.OSGIKillbillEventHandler {
+public class HyperswitchListener implements OSGIKillbillEventDispatcher.OSGIKillbillEventHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(HelloWorldListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(HyperswitchListener.class);
 
     private final OSGIKillbillAPI osgiKillbillAPI;
 
-    public HelloWorldListener(final OSGIKillbillAPI killbillAPI) {
+    public HyperswitchListener(final OSGIKillbillAPI killbillAPI) {
         this.osgiKillbillAPI = killbillAPI;
     }
 

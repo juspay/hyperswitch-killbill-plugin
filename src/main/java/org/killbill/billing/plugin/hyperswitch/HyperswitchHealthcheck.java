@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.killbill.billing.plugin.helloworld;
+package org.killbill.billing.plugin.hyperswitch;
 
 import java.util.Map;
 
@@ -25,11 +25,33 @@ import javax.annotation.Nullable;
 
 import org.killbill.billing.osgi.api.Healthcheck;
 import org.killbill.billing.tenant.api.Tenant;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.killbill.billing.osgi.api.Healthcheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class HelloWorldHealthcheck implements Healthcheck {
-
+public class HyperswitchHealthcheck implements Healthcheck {
+    private static final Logger logger = LoggerFactory.getLogger(HyperswitchHealthcheck.class);
     @Override
     public HealthStatus getHealthStatus(@Nullable final Tenant tenant, @Nullable final Map properties) {
-        return HealthStatus.healthy();
+
+        if (tenant == null) {
+            // The plugin is running
+            return HealthStatus.healthy("Hyperswitch OK");
+        } else {
+            // Specifying the tenant lets you also validate the tenant configuration
+            return pingGatewayService();
+        }
+    }
+
+    private HealthStatus pingGatewayService() {
+        try {
+
+            return HealthStatus.healthy("Hyperswitch OK");
+        } catch (final Exception e) {
+            logger.warn("Healthcheck error", e);
+            return HealthStatus.unHealthy("Hyperswitch error: " + e.getMessage());
+        }
     }
 }
