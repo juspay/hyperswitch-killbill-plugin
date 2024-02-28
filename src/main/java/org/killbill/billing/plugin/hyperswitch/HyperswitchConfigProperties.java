@@ -31,7 +31,7 @@ import java.util.Properties;
 
 
 public class HyperswitchConfigProperties {
-    private static final String PROPERTY_PREFIX = "org.killbill.billing.plugin.hyperswitch.*";
+    private static final String PROPERTY_PREFIX = "org.killbill.billing.plugin.hyperswitch.";
 
 
 	public static final String HYPERSWITCH_API_KEY = "HYPERSWITCH_API_KEY";
@@ -48,21 +48,21 @@ public class HyperswitchConfigProperties {
 	}
 	
 	public HyperswitchConfigProperties(final Properties properties, final String region) {
-		this.hyperswitchApikey = properties.getProperty(PROPERTY_PREFIX + "hyperswitchapikey");
+		this.hyperswitchApikey = properties.getProperty(PROPERTY_PREFIX + "hyperswitchApikey");
 		this.environment = properties.getProperty(PROPERTY_PREFIX + "environment", "sandbox"); // defaults to sandbox
 	}
 	
 
 	public String getHSApiKey() {
 		if (hyperswitchApikey == null || hyperswitchApikey.isEmpty()) {
-			return getClient(HYPERSWITCH_API_KEY, null);
+			return getClient(hyperswitchApikey, null);
 		}
 		return hyperswitchApikey;
 	}
 	
 	public String getEnvironment() {
 		if (environment == null || environment.isEmpty()) {
-			return getClient(HPYERSWITCH_ENVIRONMENT_KEY, null);
+			return getClient(environment, null);
 		}
 		return environment;
 	}	

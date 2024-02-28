@@ -96,6 +96,23 @@ public class HyperswitchDao extends PluginPaymentDao<HyperswitchResponsesRecord,
                 });
     }
 
+    public HyperswitchPaymentMethodsRecord getPaymentMethod(final String kbPaymentMethodId)
+      throws SQLException {
+    return execute(
+        dataSource.getConnection(),
+        new WithConnectionCallback<HyperswitchPaymentMethodsRecord>() {
+          @Override
+          public HyperswitchPaymentMethodsRecord withConnection(final Connection conn)
+              throws SQLException {
+            return DSL.using(conn, dialect, settings)
+                .selectFrom(HYPERSWITCH_PAYMENT_METHODS)
+                .where(
+                    DSL.field(HYPERSWITCH_PAYMENT_METHODS.KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId))
+                .fetchOne();
+          }
+        });
+  }
+
     // public void updatePaymentMethod(final UUID kbPaymentMethodId,
     //                                 final Map<String, Object> additionalDataMap,
     //                                 final String hyperswitchId,
