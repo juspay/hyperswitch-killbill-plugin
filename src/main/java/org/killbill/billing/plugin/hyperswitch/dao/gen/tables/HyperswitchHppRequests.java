@@ -38,7 +38,7 @@ public class HyperswitchHppRequests extends TableImpl<HyperswitchHppRequestsReco
     private static final long serialVersionUID = -111676860;
 
     /**
-     * The reference instance of <code>killbill.stripe_hpp_requests</code>
+     * The reference instance of <code>killbill.hyperswitch_hpp_requests</code>
      */
     public static final HyperswitchHppRequests HYPERSWITCH_HPP_REQUESTS = new HyperswitchHppRequests();
 
@@ -51,61 +51,61 @@ public class HyperswitchHppRequests extends TableImpl<HyperswitchHppRequestsReco
     }
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.record_id</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.record_id</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, ULong> RECORD_ID = createField(DSL.name("record_id"), org.jooq.impl.SQLDataType.BIGINTUNSIGNED.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.kb_account_id</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.kb_account_id</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, String> KB_ACCOUNT_ID = createField(DSL.name("kb_account_id"), org.jooq.impl.SQLDataType.CHAR(36).nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.kb_payment_id</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.kb_payment_id</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, String> KB_PAYMENT_ID = createField(DSL.name("kb_payment_id"), org.jooq.impl.SQLDataType.CHAR(36), this, "");
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.kb_payment_transaction_id</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.kb_payment_transaction_id</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, String> KB_PAYMENT_TRANSACTION_ID = createField(DSL.name("kb_payment_transaction_id"), org.jooq.impl.SQLDataType.CHAR(36), this, "");
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.session_id</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.session_id</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, String> SESSION_ID = createField(DSL.name("session_id"), org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.additional_data</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.additional_data</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, String> ADDITIONAL_DATA = createField(DSL.name("additional_data"), org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.created_date</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.created_date</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, LocalDateTime> CREATED_DATE = createField(DSL.name("created_date"), org.jooq.impl.SQLDataType.LOCALDATETIME.nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_hpp_requests.kb_tenant_id</code>.
+     * The column <code>killbill.hyperswitch_hpp_requests.kb_tenant_id</code>.
      */
     public final TableField<HyperswitchHppRequestsRecord, String> KB_TENANT_ID = createField(DSL.name("kb_tenant_id"), org.jooq.impl.SQLDataType.CHAR(36).nullable(false), this, "");
 
     /**
-     * Create a <code>killbill.stripe_hpp_requests</code> table reference
+     * Create a <code>killbill.hyperswitch_hpp_requests</code> table reference
      */
     public HyperswitchHppRequests() {
         this(DSL.name("hyperswitch_hpp_requests"), null);
     }
 
     /**
-     * Create an aliased <code>killbill.stripe_hpp_requests</code> table reference
+     * Create an aliased <code>killbill.hyperswitch_hpp_requests</code> table reference
      */
     public HyperswitchHppRequests(String alias) {
         this(DSL.name(alias), HYPERSWITCH_HPP_REQUESTS);
     }
 
     /**
-     * Create an aliased <code>killbill.stripe_hpp_requests</code> table reference
+     * Create an aliased <code>killbill.hyperswitch_hpp_requests</code> table reference
      */
     public HyperswitchHppRequests(Name alias) {
         this(alias, HYPERSWITCH_HPP_REQUESTS);

@@ -17,6 +17,7 @@
 
 /*! SET default_storage_engine=INNODB */;
 
+drop table if exists create table hyperswitch_payment_methods ;
 create table hyperswitch_payment_methods (
   record_id serial
 , kb_account_id char(36) not null
@@ -32,3 +33,25 @@ create table hyperswitch_payment_methods (
 ) /*! CHARACTER SET utf8 COLLATE utf8_bin */;
 create unique index hyperswitch_payment_methods_kb_payment_id on hyperswitch_payment_methods(kb_payment_method_id);
 create index hyperswitch_payment_methods_hyperswitch_id on hyperswitch_payment_methods(hyperswitch_id);
+
+
+drop table if exists hyperswitch_responses;
+create table hyperswitch_responses (
+  record_id serial
+, kb_account_id char(36) not null
+, kb_payment_id char(36) not null
+, kb_payment_transaction_id char(36) not null
+, transaction_type varchar(32) not null
+, amount numeric(15,9)
+, currency char(3)
+, payment_attempt_id varchar(64) not null
+, error_message varchar(64)
+, error_code varchar(64)
+, additional_data longtext default null
+, created_date datetime not null
+, kb_tenant_id char(36) not null
+, primary key(record_id)
+) /*! CHARACTER SET utf8 COLLATE utf8_bin */;
+create index hyperswitch_responses_kb_payment_id on hyperswitch_responses(kb_payment_id);
+create index hyperswitch_responses_kb_payment_transaction_id on hyperswitch_responses(kb_payment_transaction_id);
+create index hyperswitch_responses_payment_attmept_id on hyperswitch_responses(payment_attempt_id);

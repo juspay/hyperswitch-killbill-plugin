@@ -71,7 +71,7 @@
         <dependency>
             <groupId>io.github.juspay.hyperswitch</groupId>
             <artifactId>hyperswitch-java-client</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>

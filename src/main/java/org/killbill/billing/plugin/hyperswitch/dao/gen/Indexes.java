@@ -27,7 +27,7 @@ public class Indexes {
     public static final Index HYPERSWITCH_PAYMENT_METHODS_HYPERSWITCH_PAYMENT_METHODS_HYPERSWITCH_ID = Indexes0.HYPERSWITCH_PAYMENT_METHODS_HYPERSWITCH_PAYMENT_METHODS_HYPERSWITCH_ID;
     public static final Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_KB_PAYMENT_ID = Indexes0.HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_KB_PAYMENT_ID;
     public static final Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_KB_PAYMENT_TRANSACTION_ID = Indexes0.HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_KB_PAYMENT_TRANSACTION_ID;
-    public static final Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_HYPERSWITCH_ID = Indexes0.HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_HYPERSWITCH_ID;
+    public static final Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_PAYMENT_ATTEMPT_ID = Indexes0.HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_PAYMENT_ATTEMPT_ID;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -39,6 +39,6 @@ public class Indexes {
         public static Index HYPERSWITCH_PAYMENT_METHODS_HYPERSWITCH_PAYMENT_METHODS_HYPERSWITCH_ID = Internal.createIndex("hyperswitch_payment_methods_hyperswitch_id", HyperswitchPaymentMethods.HYPERSWITCH_PAYMENT_METHODS, new OrderField[] { HyperswitchPaymentMethods.HYPERSWITCH_PAYMENT_METHODS.HYPERSWITCH_ID }, false);
         public static Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_KB_PAYMENT_ID = Internal.createIndex("hyperswitch_responses_kb_payment_id", HyperswitchResponses.HYPERSWITCH_RESPONSES, new OrderField[] { HyperswitchResponses.HYPERSWITCH_RESPONSES.KB_PAYMENT_ID }, false);
         public static Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_KB_PAYMENT_TRANSACTION_ID = Internal.createIndex("hyperswitch_responses_kb_payment_transaction_id", HyperswitchResponses.HYPERSWITCH_RESPONSES, new OrderField[] { HyperswitchResponses.HYPERSWITCH_RESPONSES.KB_PAYMENT_TRANSACTION_ID }, false);
-        public static Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_HYPERSWITCH_ID = Internal.createIndex("hyperswitch_responses_hyperswitch_id", HyperswitchResponses.HYPERSWITCH_RESPONSES, new OrderField[] { HyperswitchResponses.HYPERSWITCH_RESPONSES.HYPERSWITCH_ID }, false);
+        public static Index HYPERSWITCH_RESPONSES_HYPERSWITCH_RESPONSES_PAYMENT_ATTEMPT_ID = Internal.createIndex("hyperswitch_responses_hyperswitch_id", HyperswitchResponses.HYPERSWITCH_RESPONSES, new OrderField[] { HyperswitchResponses.HYPERSWITCH_RESPONSES.PAYMENT_ATTEMPT_ID }, false);
     }
 }
