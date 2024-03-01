@@ -5,7 +5,7 @@ Plugin to use [Hyperswitch](https://hyperswitch.io/) as a payment orchastrator.
 
 ## Requirements
 
-The plugin needs a database. The latest version of the schema can be found [here](https://github.com/srujanchikke/hyperswitchplugin/tree/d07af03287fe91354278a6b2202b6e82bf08d07a/src/test/resources).
+The plugin needs a database. The latest version of the schema can be found [here](https://github.com/srujanchikke/hyperswitchplugin/blob/d07af03287fe91354278a6b2202b6e82bf08d07a/src/main/resources/ddl.sql).
 
 ## Installation
 
