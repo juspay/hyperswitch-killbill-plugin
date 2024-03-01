@@ -1,39 +1,103 @@
-# killbill-hello-world-java-plugin
+# killbill-hyperswitch-plugin
 
-Hello World Kill Bill plugin in Java. It shows how to:
+Plugin to use [Hyperswitch](https://hyperswitch.io/) as a payment orchastrator.
 
-* Build an OSGI plugin using Maven
-* Listen to Kill Bill events
-* Call Kill Bill APIs from the plugin
-* Register a custom HTTP servlet
 
-## Getting Started
+## Requirements
 
-To build, run `mvn clean install`. You can then install the plugin locally:
+The plugin needs a database. The latest version of the schema can be found [here](https://github.com/srujanchikke/hyperswitchplugin/tree/d07af03287fe91354278a6b2202b6e82bf08d07a/src/test/resources).
+
+## Installation
+
+Locally:
 
 ```
-kpm install_java_plugin helloworld --from-source-file target/hello-world-plugin-*-SNAPSHOT.jar --destination /var/tmp/bundles
+kpm install_java_plugin stripe --from-source-file target/hyperswitchplugin-*-SNAPSHOT.jar --destination /var/tmp/bundles
 ```
 
-You can also use it as a template for your own plugins:
+## Configuration
+
+Create an apikey from hyperswitch dashboard. To know more click [here](https://docs.hyperswitch.io/hyperswitch-open-source/account-setup/using-hyperswitch-control-center#user-content-create-an-api-key)
+
+Then, go to the Kaui plugin configuration page (`/admin_tenants/1?active_tab=PluginConfig`), and configure the `hyperswitch` plugin with your key:
+
+```java
+org.killbill.billing.plugin.hyperswitch.hyperswitchApikey=API_KEY
+org.killbill.billing.plugin.hyperswitch.environment=ENVIRONMENT
+```
+
+Alternatively, you can upload the configuration directly:
 
 ```bash
-curl https://codeload.github.com/killbill/killbill-hello-world-java-plugin/tar.gz/master | tar zxvf - --strip-components=1
-rm -rf .circleci LICENSE .idea/copyright
+curl -v \
+     -X POST \
+     -u admin:password \
+     -H 'X-Killbill-ApiKey: bob' \
+     -H 'X-Killbill-ApiSecret: lazar' \
+     -H 'X-Killbill-CreatedBy: admin' \
+     -H 'Content-Type: text/plain' \
+     -d 'org.killbill.billing.plugin.hyperswitch.hyperswitchApikey=API_KEY
+org.killbill.billing.plugin.hyperswitch.environment=ENVIRONMENT' \
+     http://127.0.0.1:8080/1.0/kb/tenants/uploadPluginConfig/hyperswitch-plugin
+```
+# Add mandate id to payment method
 
-PACKAGE=acme
-PREFIX=Acme
+Create mandate id with killbill customer id at hyperswitch pass this mandate id to killbill. add `idDefault=true` in query parmas to make this payment method to default for killbill account.
 
-mv src/main/java/org/killbill/billing/plugin/helloworld src/main/java/org/killbill/billing/plugin/$PACKAGE
-find . -name 'HelloWorld*.java' -exec bash -c 'mv $0 ${0/HelloWorld/'$PREFIX'}' {} \;
+```
+curl --location --request POST 'http://127.0.0.1:8080/1.0/kb/accounts/<KB_ACCOUNT_ID>/paymentMethods?isDefault=true' \
+--header 'X-Killbill-ApiKey: bob' \
+--header 'X-Killbill-ApiSecret: lazar' \
+--header 'Content-Type: application/json' \
+--header 'Accept: application/json' \
+--header 'X-Killbill-CreatedBy: demo' \
+--header 'X-Killbill-Reason: demo' \
+--header 'X-Killbill-Comment: demo' \
+--data-raw '{
+  			"pluginName": "hyperswitch-plugin",
+  			"pluginInfo": {
+    			"isDefaultPaymentMethod": true,
+    			"properties": [
+      				{
+        				"key": "mandateId",
+        				"value": "YOUR_MANDATE_ID",
+        				"isUpdatable": false
+      				}
+    			]
+  			}
+		}'
+```
+Note : If your customer is not same as killbill account id pass the pass it with properties(This flow will be updated).
 
-find pom.xml src -type f -print0 | xargs -0 sed -i '' 's/org\.killbill\.billing\.plugin\.helloworld/org\.killbill\.billing\.plugin\.'$PACKAGE'/g'
-find pom.xml src -type f -print0 | xargs -0 sed -i '' 's/HelloWorld/'$PREFIX'/g'
-find pom.xml src -type f -print0 | xargs -0 sed -i '' 's/helloWorld/'$PACKAGE'/g'
-find .idea pom.xml src -type f -print0 | xargs -0 sed -i '' 's/hello-world-/'$PACKAGE'-/g'
+# Purchase payment 
+
+Inorder to make merchant initiated transaction call payments api at killbill.
+
+```
+curl --location --request POST 'http://127.0.0.1:8080/1.0/kb/accounts/<KB_ACCOUNT_ID>/payments' \
+--header 'X-Killbill-ApiKey: bob' \
+--header 'X-Killbill-ApiSecret: lazar' \
+--header 'X-Killbill-CreatedBy: tutorial' \
+--header 'Content-Type: application/json' \\
+--data-raw '{
+    "transactionType": "PURCHASE",
+    "amount": "60",
+    "currency" : "USD"
+}'
 ```
 
-Finally, modify the pom.xml with your own Git urls.
+# Payments retrieve
+
+By default, Hyperswitch calls payment gateway whenever you call this method for non terminal state for plugin payment status.
+
+```
+curl --location --request GET 'http://127.0.0.1:8080/1.0/kb/payments/<KB_PAYMENT_ID>?withPluginInfo=true' \
+--header 'X-Killbill-ApiKey: bob' \
+--header 'X-Killbill-ApiSecret: lazar' \
+--header 'Accept: application/json' \
+```
+
+
 
 ## About
 
