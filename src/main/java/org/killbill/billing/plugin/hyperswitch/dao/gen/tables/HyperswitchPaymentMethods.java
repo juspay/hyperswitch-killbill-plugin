@@ -38,7 +38,7 @@ public class HyperswitchPaymentMethods extends TableImpl<HyperswitchPaymentMetho
     private static final long serialVersionUID = -18202213;
 
     /**
-     * The reference instance of <code>killbill.stripe_payment_methods</code>
+     * The reference instance of <code>killbill.hyperswitch_payment_methods</code>
      */
     public static final HyperswitchPaymentMethods HYPERSWITCH_PAYMENT_METHODS = new HyperswitchPaymentMethods();
 
@@ -51,71 +51,71 @@ public class HyperswitchPaymentMethods extends TableImpl<HyperswitchPaymentMetho
     }
 
     /**
-     * The column <code>killbill.stripe_payment_methods.record_id</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.record_id</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, ULong> RECORD_ID = createField(DSL.name("record_id"), org.jooq.impl.SQLDataType.BIGINTUNSIGNED.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.kb_account_id</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.kb_account_id</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, String> KB_ACCOUNT_ID = createField(DSL.name("kb_account_id"), org.jooq.impl.SQLDataType.CHAR(36).nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.kb_payment_method_id</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.kb_payment_method_id</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, String> KB_PAYMENT_METHOD_ID = createField(DSL.name("kb_payment_method_id"), org.jooq.impl.SQLDataType.CHAR(36).nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.stripe_id</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.hyperswitch_id</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, String> HYPERSWITCH_ID = createField(DSL.name("hyperswitch_id"), org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.is_default</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.is_default</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, Short> IS_DEFAULT = createField(DSL.name("is_default"), org.jooq.impl.SQLDataType.SMALLINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.SMALLINT)), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.is_deleted</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.is_deleted</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, Short> IS_DELETED = createField(DSL.name("is_deleted"), org.jooq.impl.SQLDataType.SMALLINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.SMALLINT)), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.additional_data</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.additional_data</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, String> ADDITIONAL_DATA = createField(DSL.name("additional_data"), org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.created_date</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.created_date</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, LocalDateTime> CREATED_DATE = createField(DSL.name("created_date"), org.jooq.impl.SQLDataType.LOCALDATETIME.nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.updated_date</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.updated_date</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, LocalDateTime> UPDATED_DATE = createField(DSL.name("updated_date"), org.jooq.impl.SQLDataType.LOCALDATETIME.nullable(false), this, "");
 
     /**
-     * The column <code>killbill.stripe_payment_methods.kb_tenant_id</code>.
+     * The column <code>killbill.hyperswitch_payment_methods.kb_tenant_id</code>.
      */
     public final TableField<HyperswitchPaymentMethodsRecord, String> KB_TENANT_ID = createField(DSL.name("kb_tenant_id"), org.jooq.impl.SQLDataType.CHAR(36).nullable(false), this, "");
 
     /**
-     * Create a <code>killbill.stripe_payment_methods</code> table reference
+     * Create a <code>killbill.hyperswitch_payment_methods</code> table reference
      */
     public HyperswitchPaymentMethods() {
         this(DSL.name("hyperswitch_payment_methods"), null);
     }
 
     /**
-     * Create an aliased <code>killbill.stripe_payment_methods</code> table reference
+     * Create an aliased <code>killbill.hyperswitch_payment_methods</code> table reference
      */
     public HyperswitchPaymentMethods(String alias) {
         this(DSL.name(alias), HYPERSWITCH_PAYMENT_METHODS);
     }
 
     /**
-     * Create an aliased <code>killbill.stripe_payment_methods</code> table reference
+     * Create an aliased <code>killbill.hyperswitch_payment_methods</code> table reference
      */
     public HyperswitchPaymentMethods(Name alias) {
         this(alias, HYPERSWITCH_PAYMENT_METHODS);

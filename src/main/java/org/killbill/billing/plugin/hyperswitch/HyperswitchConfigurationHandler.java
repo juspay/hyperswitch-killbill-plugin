@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
  *      -H "X-Killbill-CreatedBy: demo" \
  *      -d 'key1=foo1
  * key2=foo2' \
- *      "http://127.0.0.1:8080/1.0/kb/tenants/uploadPluginConfig/hello-world-plugin"
+ *      "http://127.0.0.1:8080/1.0/kb/tenants/uploadPluginConfig/hyperswitch-plugin"
  * }
  * </pre>
  */

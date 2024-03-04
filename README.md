@@ -12,7 +12,7 @@ The plugin needs a database. The latest version of the schema can be found [here
 Locally:
 
 ```
-kpm install_java_plugin stripe --from-source-file target/hyperswitchplugin-*-SNAPSHOT.jar --destination /var/tmp/bundles
+kpm install_java_plugin hyperswitch --from-source-file target/hyperswitchplugin-*-SNAPSHOT.jar --destination /var/tmp/bundles
 ```
 
 ## Configuration

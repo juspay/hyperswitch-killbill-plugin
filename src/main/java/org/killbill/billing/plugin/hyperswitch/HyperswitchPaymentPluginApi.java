@@ -50,6 +50,7 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.billing.util.entity.Pagination;
 import org.killbill.clock.Clock;
 import java.sql.SQLException;
+import feign.FeignException.BadRequest;
 
 import com.hyperswitch.client.HsApiClient;
 import com.hyperswitch.client.api.PaymentsApi;
@@ -112,31 +113,37 @@ public class HyperswitchPaymentPluginApi extends
         paymentsCreateRequest.confirm(true);
         paymentsCreateRequest.customerId(kbAccountId.toString());
         paymentsCreateRequest.offSession(true);
-        PaymentPluginStatus paymentPluginStatus;
-        PaymentsResponse response;
+        PaymentPluginStatus paymentPluginStatus = null;
+        PaymentsResponse response = null;
         try {
             HyperswitchPaymentMethodsRecord record = this.hyperswitchDao.getPaymentMethod(kbPaymentMethodId.toString());
             String mandate_id = record.getHyperswitchId();
             paymentsCreateRequest.setMandateId(mandate_id);
             PaymentsApi ClientApi = buildHyperswitchClient(context);
-            response = ClientApi.createAPayment(paymentsCreateRequest);
-            paymentPluginStatus = convertPaymentStatus(response.getStatus());
-            final DateTime utcNow = clock.getUTCNow();
             try {
-                hyperswitchRecord = this.hyperswitchDao.addResponse(
-                        kbAccountId,
-                        kbPaymentId,
-                        kbTransactionId,
-                        TransactionType.PURCHASE,
-                        amount,
-                        currency,
-                        response,
-                        utcNow,
-                        context.getTenantId());
-            } catch (SQLException e) {
-                logger.error("[purchasePayment]  encountered a database error ", e);
-                return HyperswitchPaymentTransactionInfoPlugin.cancelPaymentTransactionInfoPlugin(
-                        TransactionType.PURCHASE, "[purchasePayment]  encountered a database error ");
+                response = ClientApi.createAPayment(paymentsCreateRequest);
+                try {
+                    paymentPluginStatus = convertPaymentStatus(response.getStatus());
+                    final DateTime utcNow = clock.getUTCNow();
+                    hyperswitchRecord = this.hyperswitchDao.addResponse(
+                            kbAccountId,
+                            kbPaymentId,
+                            kbTransactionId,
+                            TransactionType.PURCHASE,
+                            amount,
+                            currency,
+                            response,
+                            utcNow,
+                            context.getTenantId());
+                } catch (SQLException e) {
+                    logger.error("[purchasePayment]  encountered a database error ", e);
+                    return HyperswitchPaymentTransactionInfoPlugin.cancelPaymentTransactionInfoPlugin(
+                            TransactionType.PURCHASE, "[purchasePayment]  encountered a database error ");
+                }
+            } catch (BadRequest e) {
+                String responseBody = e.contentUTF8(); 
+                String message = responseBody.toString();
+                throw new PaymentPluginApiException(message, e);
             }
         } catch (SQLException e) {
             throw new PaymentPluginApiException("Couldn't find payment method id for account", e);

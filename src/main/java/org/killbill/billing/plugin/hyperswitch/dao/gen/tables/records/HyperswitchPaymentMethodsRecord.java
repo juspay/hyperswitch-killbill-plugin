@@ -24,140 +24,140 @@ public class HyperswitchPaymentMethodsRecord extends UpdatableRecordImpl<Hypersw
     private static final long serialVersionUID = 1159142458;
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.record_id</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.record_id</code>.
      */
     public void setRecordId(ULong value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.record_id</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.record_id</code>.
      */
     public ULong getRecordId() {
         return (ULong) get(0);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.kb_account_id</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.kb_account_id</code>.
      */
     public void setKbAccountId(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.kb_account_id</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.kb_account_id</code>.
      */
     public String getKbAccountId() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.kb_payment_method_id</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.kb_payment_method_id</code>.
      */
     public void setKbPaymentMethodId(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.kb_payment_method_id</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.kb_payment_method_id</code>.
      */
     public String getKbPaymentMethodId() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.stripe_id</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.hyperswitch_id</code>.
      */
     public void setHyperswitchId(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.stripe_id</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.hyperswitch_id</code>.
      */
     public String getHyperswitchId() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.is_default</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.is_default</code>.
      */
     public void setIsDefault(Short value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.is_default</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.is_default</code>.
      */
     public Short getIsDefault() {
         return (Short) get(4);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.is_deleted</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.is_deleted</code>.
      */
     public void setIsDeleted(Short value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.is_deleted</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.is_deleted</code>.
      */
     public Short getIsDeleted() {
         return (Short) get(5);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.additional_data</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.additional_data</code>.
      */
     public void setAdditionalData(String value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.additional_data</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.additional_data</code>.
      */
     public String getAdditionalData() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.created_date</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.created_date</code>.
      */
     public void setCreatedDate(LocalDateTime value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.created_date</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.created_date</code>.
      */
     public LocalDateTime getCreatedDate() {
         return (LocalDateTime) get(7);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.updated_date</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.updated_date</code>.
      */
     public void setUpdatedDate(LocalDateTime value) {
         set(8, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.updated_date</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.updated_date</code>.
      */
     public LocalDateTime getUpdatedDate() {
         return (LocalDateTime) get(8);
     }
 
     /**
-     * Setter for <code>killbill.stripe_payment_methods.kb_tenant_id</code>.
+     * Setter for <code>killbill.hyperswitch_payment_methods.kb_tenant_id</code>.
      */
     public void setKbTenantId(String value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>killbill.stripe_payment_methods.kb_tenant_id</code>.
+     * Getter for <code>killbill.hyperswitch_payment_methods.kb_tenant_id</code>.
      */
     public String getKbTenantId() {
         return (String) get(9);
@@ -416,14 +416,14 @@ public class HyperswitchPaymentMethodsRecord extends UpdatableRecordImpl<Hypersw
     // -------------------------------------------------------------------------
 
     /**
-     * Create a detached StripePaymentMethodsRecord
+     * Create a detached HyperswitchPaymentMethodsRecord
      */
     public HyperswitchPaymentMethodsRecord() {
         super(HyperswitchPaymentMethods.HYPERSWITCH_PAYMENT_METHODS);
     }
 
     /**
-     * Create a detached, initialised StripePaymentMethodsRecord
+     * Create a detached, initialised HyperswitchPaymentMethodsRecord
      */
     public HyperswitchPaymentMethodsRecord(ULong recordId, String kbAccountId, String kbPaymentMethodId, String hyperswitchId, Short isDefault, Short isDeleted, String additionalData, LocalDateTime createdDate, LocalDateTime updatedDate, String kbTenantId) {
         super(HyperswitchPaymentMethods.HYPERSWITCH_PAYMENT_METHODS);
