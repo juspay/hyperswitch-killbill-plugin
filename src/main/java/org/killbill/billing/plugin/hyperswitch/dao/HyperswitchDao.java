@@ -74,7 +74,6 @@ public class HyperswitchDao extends
                 new WithConnectionCallback<HyperswitchResponsesRecord>() {
                     @Override
                     public HyperswitchResponsesRecord withConnection(final Connection conn) throws SQLException {
-                        System.out.println("Adding payment method");
                         DSL.using(conn, dialect, settings)
                                 .insertInto(HYPERSWITCH_PAYMENT_METHODS,
                                         HYPERSWITCH_PAYMENT_METHODS.KB_ACCOUNT_ID,
@@ -94,7 +93,6 @@ public class HyperswitchDao extends
                                         toLocalDateTime(new DateTime()),
                                         kbTenantId.toString())
                                 .execute();
-                        System.out.println("Added payment method successfully");
                         return null;
                     }
                 });
