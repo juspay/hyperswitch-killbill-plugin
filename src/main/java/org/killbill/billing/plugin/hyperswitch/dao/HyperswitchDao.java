@@ -280,7 +280,7 @@ public class HyperswitchDao extends
                 });
     }
 
-    public HyperswitchResponsesRecord getSuccessfulPurchaseResponse(
+    public HyperswitchResponsesRecord getSuccessfulResponse(
       final UUID kbPaymentId, final UUID kbTenantId) throws SQLException {
     return execute(
         dataSource.getConnection(),

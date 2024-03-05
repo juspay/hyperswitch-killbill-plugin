@@ -97,9 +97,13 @@ public class HyperswitchPaymentTransactionInfoPlugin extends PluginPaymentTransa
 
 	private static PaymentPluginStatus getPaymentPluginStatus(final Map additionalData) {
         final String status = (String) additionalData.get("status");
-        if ("succeeded".equals(status)) {
+		System.out.println("Plugin status loading");
+        if ("succeeded".equals(status) || "requires_capture".equals(status)) {
             return PaymentPluginStatus.PROCESSED;
-        } else if ("processing".equals(status)) {
+        } else if("cancelled".equals(status)) {
+			return PaymentPluginStatus.CANCELED;
+		}
+		else if ("processing".equals(status)) {
             return PaymentPluginStatus.PENDING;
         } else {
             return PaymentPluginStatus.UNDEFINED;
