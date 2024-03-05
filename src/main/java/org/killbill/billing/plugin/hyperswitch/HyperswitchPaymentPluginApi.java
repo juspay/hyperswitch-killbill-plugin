@@ -61,7 +61,9 @@ import com.hyperswitch.client.model.PaymentsResponse;
 import com.hyperswitch.client.model.RefundRequest;
 import com.hyperswitch.client.model.RefundResponse;
 import com.hyperswitch.client.model.RefundStatus;
+import com.hyperswitch.client.model.CaptureMethod;
 import com.hyperswitch.client.model.IntentStatus;
+import com.hyperswitch.client.model.PaymentsCaptureRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,18 +94,119 @@ public class HyperswitchPaymentPluginApi extends
             final UUID kbTransactionId, final UUID kbPaymentMethodId, final BigDecimal amount, final Currency currency,
             final Iterable<PluginProperty> properties, final CallContext context) throws PaymentPluginApiException {
         HyperswitchResponsesRecord hyperswitchRecord = null;
-        PaymentTransactionInfoPlugin paymentTransactionInfoPlugin = new HyperswitchPaymentTransactionInfoPlugin(
-                hyperswitchRecord, kbPaymentId, kbTransactionId,
-                TransactionType.AUTHORIZE, amount, currency, PaymentPluginStatus.CANCELED, null,
-                null, null, null, new DateTime(), null, null);
-        return paymentTransactionInfoPlugin;
+        PaymentsCreateRequest paymentsCreateRequest = new PaymentsCreateRequest();
+        paymentsCreateRequest.setAmount(KillBillMoney.toMinorUnits(currency.toString(), amount));
+        paymentsCreateRequest.setCurrency(convertCurrency(currency));
+        paymentsCreateRequest.confirm(true);
+        paymentsCreateRequest.customerId(kbAccountId.toString());
+        paymentsCreateRequest.offSession(true);
+        paymentsCreateRequest.setCaptureMethod(CaptureMethod.MANUAL);
+        PaymentPluginStatus paymentPluginStatus = null;
+        PaymentsResponse response = null;
+        try {
+            HyperswitchPaymentMethodsRecord record = this.hyperswitchDao.getPaymentMethod(kbPaymentMethodId.toString());
+            String mandate_id = record.getHyperswitchId();
+            paymentsCreateRequest.setMandateId(mandate_id);
+            PaymentsApi ClientApi = buildHyperswitchClient(context);
+            try {
+                response = ClientApi.createAPayment(paymentsCreateRequest);
+                try {
+                    paymentPluginStatus = convertPaymentStatus(response.getStatus());
+                    final DateTime utcNow = clock.getUTCNow();
+                    hyperswitchRecord = this.hyperswitchDao.addResponse(
+                            kbAccountId,
+                            kbPaymentId,
+                            kbTransactionId,
+                            TransactionType.AUTHORIZE,
+                            amount,
+                            currency,
+                            response,
+                            utcNow,
+                            context.getTenantId());
+                } catch (SQLException e) {
+                    logger.error("[AuthorizePayment]  encountered a database error ", e);
+                    return HyperswitchPaymentTransactionInfoPlugin.cancelPaymentTransactionInfoPlugin(
+                            TransactionType.AUTHORIZE, "[authorizePayment]  encountered a database error ");
+                }
+            } catch (BadRequest e) {
+                String responseBody = e.contentUTF8();
+                String message = responseBody.toString();
+                throw new PaymentPluginApiException(message, e);
+            }
+        } catch (SQLException e) {
+            throw new PaymentPluginApiException("Couldn't find payment method id for account", e);
+        }
+        return new HyperswitchPaymentTransactionInfoPlugin(
+                hyperswitchRecord,
+                kbPaymentId,
+                kbTransactionId,
+                TransactionType.AUTHORIZE,
+                amount,
+                currency,
+                paymentPluginStatus,
+                response.getErrorMessage(),
+                response.getErrorCode(),
+                response.getPaymentId(),
+                response.getReferenceId(),
+                DateTime.now(),
+                DateTime.now(),
+                null);
     }
 
     @Override
     public PaymentTransactionInfoPlugin capturePayment(final UUID kbAccountId, final UUID kbPaymentId,
             final UUID kbTransactionId, final UUID kbPaymentMethodId, final BigDecimal amount, final Currency currency,
             final Iterable<PluginProperty> properties, final CallContext context) throws PaymentPluginApiException {
-        return null;
+        HyperswitchResponsesRecord hyperswitchRecord = null;
+        try {
+            hyperswitchRecord = this.hyperswitchDao.getSuccessfulPurchaseResponse(kbPaymentId, context.getTenantId());
+            if (this.refundValidations(hyperswitchRecord, amount) != null) {
+                return this.refundValidations(hyperswitchRecord, amount);
+            }
+        } catch (SQLException e) {
+            logger.error("[capturePayment]  but we encountered a database error", e);
+            return HyperswitchPaymentTransactionInfoPlugin.cancelPaymentTransactionInfoPlugin(
+                    TransactionType.CAPTURE, "[capturePayment] but we encountered a database error");
+        }
+        PaymentPluginStatus paymentPluginStatus = null;
+        String payment_id = hyperswitchRecord.getPaymentAttemptId();
+        PaymentsCaptureRequest paymentsRequest = new PaymentsCaptureRequest();
+        Long amountToCapture = KillBillMoney.toMinorUnits(hyperswitchRecord.getCurrency(), amount);
+        paymentsRequest.setAmountToCapture(amountToCapture);
+        PaymentsApi ClientApi = buildHyperswitchClient(context);
+        PaymentsResponse response = null;
+        try {
+            response = ClientApi.captureAPayment(payment_id, paymentsRequest);
+            paymentPluginStatus = convertPaymentStatus(response.getStatus());
+            try {
+                hyperswitchRecord = this.hyperswitchDao.addResponse(
+                        kbAccountId,
+                        kbPaymentMethodId, kbPaymentMethodId, TransactionType.CAPTURE, amount, currency, response,
+                        DateTime.now(), context.getTenantId());
+            } catch (final SQLException e) {
+                throw new PaymentPluginApiException("Unable to refresh payment", e);
+            }
+        } catch (BadRequest e) {
+            String responseBody = e.contentUTF8();
+            String message = responseBody.toString();
+            throw new PaymentPluginApiException(message, e);
+        }
+
+        return new HyperswitchPaymentTransactionInfoPlugin(
+                hyperswitchRecord,
+                kbPaymentId,
+                kbTransactionId,
+                TransactionType.CAPTURE,
+                amount,
+                currency,
+                paymentPluginStatus,
+                response.getErrorMessage(),
+                response.getErrorCode(),
+                response.getPaymentId(),
+                response.getReferenceId(),
+                DateTime.now(),
+                DateTime.now(),
+                null);
     }
 
     @Override
@@ -146,7 +249,7 @@ public class HyperswitchPaymentPluginApi extends
                             TransactionType.PURCHASE, "[purchasePayment]  encountered a database error ");
                 }
             } catch (BadRequest e) {
-                String responseBody = e.contentUTF8(); 
+                String responseBody = e.contentUTF8();
                 String message = responseBody.toString();
                 throw new PaymentPluginApiException(message, e);
             }
@@ -355,7 +458,10 @@ public class HyperswitchPaymentPluginApi extends
 
     private PaymentPluginStatus convertPaymentStatus(IntentStatus paymentStatus) {
         switch (paymentStatus) {
+            case REQUIRES_CAPTURE:
             case SUCCEEDED:
+            case PARTIALLY_CAPTURED:
+            case PARTIALLY_CAPTURED_AND_CAPTURABLE:
                 return PaymentPluginStatus.PROCESSED;
             case PROCESSING:
                 return PaymentPluginStatus.PENDING;
@@ -370,13 +476,13 @@ public class HyperswitchPaymentPluginApi extends
 
     private PaymentPluginStatus convertRefundStatus(RefundStatus refundStatus) {
         switch (refundStatus) {
-            case SUCCEEDED: 
+            case SUCCEEDED:
                 return PaymentPluginStatus.PROCESSED;
-            case PENDING : 
+            case PENDING:
                 return PaymentPluginStatus.PENDING;
-            case FAILED :
+            case FAILED:
                 return PaymentPluginStatus.ERROR;
-            case REVIEW :
+            case REVIEW:
                 return PaymentPluginStatus.PENDING;
             default:
                 return PaymentPluginStatus.UNDEFINED;
