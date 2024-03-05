@@ -41,6 +41,7 @@ import org.killbill.billing.plugin.dao.payment.PluginPaymentDao;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.ImmutableMap;
 import com.hyperswitch.client.model.PaymentsResponse;
+import com.hyperswitch.client.model.RefundResponse;
 
 import org.killbill.billing.plugin.hyperswitch.HyperswitchPluginProperties;
 import org.killbill.billing.plugin.hyperswitch.dao.gen.tables.HyperswitchPaymentMethods;
@@ -164,6 +165,54 @@ public class HyperswitchDao extends
                 }));
     }
 
+    public HyperswitchResponsesRecord addResponse(final UUID kbAccountId,
+            final UUID kbPaymentId,
+            final UUID kbPaymentTransactionId,
+            final TransactionType transactionType,
+            final BigDecimal amount,
+            final Currency currency,
+            final RefundResponse refundResponse,
+            final DateTime utcNow,
+            final UUID kbTenantId) throws SQLException {
+        final Map<String, Object> additionalDataMap;
+        additionalDataMap = HyperswitchPluginProperties.toAdditionalDataMap(refundResponse);
+        return execute(dataSource.getConnection(),
+                conn -> DSL.using(conn, dialect, settings).transactionResult(configuration -> {
+                    final DSLContext dslContext = DSL.using(configuration);
+                    dslContext.insertInto(HYPERSWITCH_RESPONSES,
+                            HYPERSWITCH_RESPONSES.KB_ACCOUNT_ID,
+                            HYPERSWITCH_RESPONSES.KB_PAYMENT_ID,
+                            HYPERSWITCH_RESPONSES.KB_PAYMENT_TRANSACTION_ID,
+                            HYPERSWITCH_RESPONSES.TRANSACTION_TYPE,
+                            HYPERSWITCH_RESPONSES.AMOUNT,
+                            HYPERSWITCH_RESPONSES.CURRENCY,
+                            HYPERSWITCH_RESPONSES.PAYMENT_ATTEMPT_ID,
+                            HYPERSWITCH_RESPONSES.ERROR_MESSAGE,
+                            HYPERSWITCH_RESPONSES.ERROR_CODE,
+                            HYPERSWITCH_RESPONSES.ADDITIONAL_DATA,
+                            HYPERSWITCH_RESPONSES.CREATED_DATE,
+                            HYPERSWITCH_RESPONSES.KB_TENANT_ID)
+                            .values(kbAccountId.toString(),
+                                    kbPaymentId.toString(),
+                                    kbPaymentTransactionId.toString(),
+                                    transactionType.toString(),
+                                    amount,
+                                    currency == null ? null : currency.name(),
+                                    refundResponse.getPaymentId(),
+                                    refundResponse.getErrorMessage(),
+                                    refundResponse.getErrorCode(),
+                                    asString(additionalDataMap),
+                                    toLocalDateTime(utcNow),
+                                    kbTenantId.toString())
+                            .execute();
+                    return dslContext.fetchOne(
+                            HYPERSWITCH_RESPONSES,
+                            HYPERSWITCH_RESPONSES.RECORD_ID
+                                    .eq(HYPERSWITCH_RESPONSES.RECORD_ID.getDataType().convert(dslContext.lastID())));
+                }));
+    }
+
+
     public HyperswitchResponsesRecord updateResponse(final UUID kbPaymentTransactionId,
             final PaymentsResponse hyperswitchPaymentResponse,
             final UUID kbTenantId) throws SQLException {
@@ -232,6 +281,24 @@ public class HyperswitchDao extends
                     }
                 });
     }
+
+    public HyperswitchResponsesRecord getSuccessfulPurchaseResponse(
+      final UUID kbPaymentId, final UUID kbTenantId) throws SQLException {
+    return execute(
+        dataSource.getConnection(),
+        new WithConnectionCallback<HyperswitchResponsesRecord>() {
+          @Override
+          public HyperswitchResponsesRecord withConnection(final Connection conn) throws SQLException {
+            return DSL.using(conn, dialect, settings)
+                .selectFrom(HYPERSWITCH_RESPONSES)
+                .where(DSL.field(HYPERSWITCH_RESPONSES.KB_PAYMENT_ID).equal(kbPaymentId.toString()))
+                .and(DSL.field(HYPERSWITCH_RESPONSES.KB_TENANT_ID).equal(kbTenantId.toString()))
+                //                .and(DSL.field(HYPERSWITCH_RESPONSES.TRANSACTION_TYPE).equal(PURCHASE))
+                .orderBy(HYPERSWITCH_RESPONSES.RECORD_ID)
+                .fetchOne();
+          }
+        });
+  }
 
 
     public static Map fromAdditionalData(@Nullable final String additionalData) {
