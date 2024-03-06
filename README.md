@@ -1,6 +1,6 @@
 # hyperswitch-killbill-plugin
 
-Plugin to use [Hyperswitch](https://hyperswitch.io/) as a payment orchastrator.
+Killbill payment plugin to use [Hyperswitch](https://hyperswitch.io/) as a payment orchastrator.
 
 
 ## Requirements
