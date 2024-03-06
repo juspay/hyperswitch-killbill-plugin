@@ -24,21 +24,21 @@
         <artifactId>killbill-oss-parent</artifactId>
         <version>0.146.6</version>
     </parent>
-    <groupId>org.kill-bill.billing.plugin.java</groupId>
+    <groupId>io.github.juspay.hyperswitch-killbill-plugin</groupId>
     <artifactId>hyperswitch-plugin</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>bundle</packaging>
     <name>Kill Bill OSGI Hyperswitch bundle</name>
     <description>Kill Bill Hyperswitch plugin</description>
-    <url>https://github.com/srujanchikke/hyperswitchplugin</url>
+    <url>https://github.com/juspay/hyperswitch-killbill-plugin.git</url>
     <scm>
-        <connection>scm:git@github.com:srujanchikke/hyperswitchplugin.git</connection>
-        <developerConnection>scm:git@github.com:srujanchikke/hyperswitchplugin.git</developerConnection>
-        <url>https://github.com/srujanchikke/hyperswitchplugin</url>
+        <connection>scm:git@github.com:juspay/hyperswitch-killbill-plugin.git</connection>
+        <developerConnection>scm:git@github.com:juspay/hyperswitch-killbill-plugin.git</developerConnection>
+        <url>https://github.com/juspay/hyperswitch-killbill-plugin.git</url>
     </scm>
     <issueManagement>
         <system>Github</system>
-        <url>https://github.com/srujanchikke/hyperswitchplugin/issues</url>
+        <url>https://github.com/juspay/hyperswitch-killbill-plugin.git/issues</url>
     </issueManagement>
     <properties>
         <check.skip-dependency>true</check.skip-dependency>
@@ -48,11 +48,6 @@
         <check.skip-enforcer>true</check.skip-enforcer>
         <check.skip-rat>true</check.skip-rat>
         <check.skip-spotbugs>true</check.skip-spotbugs>
-        <!-- <osgi.extra-import>com.hyperswitch.client.model.PaymentsResponse,
-            com.hyperswitch.client.HsApiClient,
-            com.hyperswitch.client.api.PaymentsApi,
-            com.hyperswitch.client.model.PaymentsCreateRequest,
-            com.hyperswitch.client.model.Currency,</osgi.extra-import> -->
         <osgi.private>org.killbill.billing.plugin.hyperswitch.*</osgi.private>
     </properties>
     <dependencies>
