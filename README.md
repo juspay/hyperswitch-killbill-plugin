@@ -13,8 +13,9 @@ A merchant can process payments with Hyperswitch while using Kill Bill as follow
 - Set up the payment processors you’d want to process through.
 We support 55+ payment processor globally and can add any new processor on request.
 
-**Merchant** - Entity integrating with Kill Bill and Hyperswitch
-**User** - The end consumer who is making the purchase on the Merchant’s website 
+**Merchant** - Entity integrating with Kill Bill and Hyperswitch.
+
+**User** - The end consumer who is making the purchase on the Merchant’s website. 
 
 ## Installation
 
@@ -132,7 +133,8 @@ We support user flow-2 with just a few modifications in the API flows shared as 
 # Subscription modification by users
 
 **1. User updates payment method details** : The merchant will load Hyperswitch SDK to allow the user to select the payment method and add the relevant payment method details. Merchant will validate and add this payment method with Hyperswitch using the $0 mandate and create a new mandate.
-The customer facing subscription management portal will have to be designed by the merchant
+The customer facing subscription management portal will have to be designed by the merchant.
+
 <br>
 <img src="img/update_payment_method.png" />
 
@@ -146,8 +148,8 @@ The customer facing subscription management portal will have to be designed by t
 	- User flow 2 : Collect and save user payment method followed by plan section and payment
 - Support for $0 mandate and card tokenization at Hyperswitch 
 - Get access to advanced upcoming subscription payment features in [Q1 roadmap](https://docs.hyperswitch.io/about-hyperswitch/roadmap)
-		- Support for connector agnostic subscription payments (MIT) with network_reference_id (in roadmap)  
-		- Support for payment transactions using gateway token (in roadmap) 
+	- Support for connector agnostic subscription payments (MIT) with network_reference_id (in roadmap)  
+	- Support for payment transactions using gateway token (in roadmap) 
 - Flexibility to route one-time transactions to any gateway
 - Centralized payment token storage 
 - Unified payment analytics 
