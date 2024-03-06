@@ -101,4 +101,7 @@ curl --location --request GET 'http://127.0.0.1:8080/1.0/kb/payments/<KB_PAYMENT
 
 ## About
 
-Kill Bill is the leading Open-Source Subscription Billing & Payments Platform. For more information about the project, go to https://killbill.io/.
+Hyperswitch is a community-led, open payments switch to enable access to the best payments infrastructure for every digital business.Get updates on Hyperswitch development and chat with the community:
+
+[Discord server](https://discord.com/invite/wJZ7DVW8mm) for questions related to contributing to hyperswitch, questions about the architecture, components, etc.
+[Slack Workspace](https://hyperswitch-io.slack.com/ssb/redirect) for questions related to integrating hyperswitch, integrating a connector in hyperswitch, etc.
