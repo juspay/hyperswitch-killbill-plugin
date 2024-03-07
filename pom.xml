@@ -24,13 +24,21 @@
         <artifactId>killbill-oss-parent</artifactId>
         <version>0.146.6</version>
     </parent>
-    <groupId>io.github.juspay.hyperswitch-killbill-plugin</groupId>
-    <artifactId>hyperswitch-plugin</artifactId>
-    <version>0.0.1</version>
-    <packaging>bundle</packaging>
+    <groupId>io.github.juspay.hyperswitchplugin</groupId>
+    <artifactId>hyperswitch-killbill-plugin</artifactId>
+    <version>0.1.0</version>
+    <packaging>jar</packaging>
     <name>Kill Bill OSGI Hyperswitch bundle</name>
     <description>Kill Bill Hyperswitch plugin</description>
     <url>https://github.com/juspay/hyperswitch-killbill-plugin.git</url>
+    <developers>
+        <developer>
+            <name>Hyperswitch</name>
+            <email>biz@hyperswitch.io</email>
+            <organization>Hyperswitch</organization>
+            <organizationUrl>https://hyperswitch.io/</organizationUrl>
+        </developer>
+    </developers>
     <scm>
         <connection>scm:git@github.com:juspay/hyperswitch-killbill-plugin.git</connection>
         <developerConnection>scm:git@github.com:juspay/hyperswitch-killbill-plugin.git</developerConnection>
@@ -157,6 +165,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
@@ -167,6 +180,40 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <serverId>sign-key-id</serverId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <doclint>none</doclint>
+                    <source>1.8</source>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
