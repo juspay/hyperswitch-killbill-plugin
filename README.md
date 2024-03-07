@@ -5,7 +5,7 @@ Killbill payment plugin to use [Hyperswitch](https://hyperswitch.io/) as a payme
 
 ## Requirements
 
-The plugin needs a database. The latest version of the schema can be found [here](https://github.com/juspay/hyperswitch-killbill-plugin.git/blob/d07af03287fe91354278a6b2202b6e82bf08d07a/src/main/resources/ddl.sql).
+The plugin needs a database. The latest version of the schema can be found [here](https://github.com/juspay/hyperswitch-killbill-plugin/blob/main/src/main/resources/ddl.sql).
 
 A merchant can process payments with Hyperswitch while using Kill Bill as follows  
 - Sign up on the Hyperswitch dashboard
