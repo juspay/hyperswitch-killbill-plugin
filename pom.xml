@@ -26,8 +26,8 @@
     </parent>
     <groupId>io.github.juspay.hyperswitchplugin</groupId>
     <artifactId>hyperswitch-killbill-plugin</artifactId>
-    <version>0.1.0</version>
-    <packaging>jar</packaging>
+    <version>0.1.1</version>
+    <packaging>bundle</packaging>
     <name>Kill Bill OSGI Hyperswitch bundle</name>
     <description>Kill Bill Hyperswitch plugin</description>
     <url>https://github.com/juspay/hyperswitch-killbill-plugin.git</url>
@@ -198,7 +198,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.2</version>
@@ -214,7 +214,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
