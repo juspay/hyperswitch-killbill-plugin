@@ -17,13 +17,22 @@ We support 55+ payment processor globally and can add any new processor on reque
 
 **User** - The end consumer who is making the purchase on the Merchant’s website. 
 
+## Build
+
+```
+mvn clean install
+```
+
 ## Installation
 
 Locally:
 
 ```
-kpm install_java_plugin hyperswitch --from-source-file target/hyperswitchplugin-*-SNAPSHOT.jar --destination /var/tmp/bundles
+kpm install_java_plugin hyperswitch --from-source-file target/hyperswitch-killbill-plugin-*-SNAPSHOT.jar --destination /var/tmp/bundles
 ```
+
+or 
+find latest version of hyperswitch plugin [here](https://central.sonatype.com/artifact/io.github.juspay.hyperswitchplugin/hyperswitch-killbill-plugin/overview)
 
 ## Configuration
 
@@ -47,12 +56,13 @@ curl -v \
      -H 'X-Killbill-CreatedBy: admin' \
      -H 'Content-Type: text/plain' \
      -d 'org.killbill.billing.plugin.hyperswitch.hyperswitchApikey=API_KEY
-org.killbill.billing.plugin.hyperswitch.environment=ENVIRONMENT' \
+org.killbill.billing.plugin.hyperswitch.environment=ENVIRONMENT
+org.killbill.billing.plugin.hyperswitch.profileId=PROFILE_ID' \
      http://127.0.0.1:8080/1.0/kb/tenants/uploadPluginConfig/hyperswitch-plugin
 ```
 # Add mandate id to payment method
 
-Create mandate id with killbill customer id at hyperswitch pass this mandate id to killbill. add `idDefault=true` in query parmas to make this payment method to default for killbill account.
+Create a [mandate payment]((https://docs.hyperswitch.io/features/payment-flows-and-management/mandates-and-recurring-payments#id-1.-create-a-mandate-payment-from-your-server)) using Killbill's account ID as Hyperswitch customer_id. Pass this mandate ID to Killbill and add idDefault=true in query parameters to make this payment method the default for the Killbill account, as shown below.
 
 ```
 curl --location --request POST 'http://127.0.0.1:8080/1.0/kb/accounts/<KB_ACCOUNT_ID>/paymentMethods?isDefault=true' \

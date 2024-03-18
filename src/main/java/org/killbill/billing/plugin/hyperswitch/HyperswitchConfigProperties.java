@@ -35,11 +35,13 @@ public class HyperswitchConfigProperties {
 
 
 	public static final String HYPERSWITCH_API_KEY = "HYPERSWITCH_API_KEY";
+	public static final String HYPERSWITCH_PROFILE_ID= "HYPERSWITCH_PROFILE_ID";
 	public static final String HPYERSWITCH_ENVIRONMENT_KEY = "HPYERSWITCH_ENVIRONMENT";
 
 
 	private final String hyperswitchApikey;
 	private final String environment;
+	private final String profileId;
     
 
 	public enum Environment {
@@ -49,6 +51,7 @@ public class HyperswitchConfigProperties {
 	
 	public HyperswitchConfigProperties(final Properties properties, final String region) {
 		this.hyperswitchApikey = properties.getProperty(PROPERTY_PREFIX + "hyperswitchApikey");
+		this.profileId = properties.getProperty(PROPERTY_PREFIX + "profileId");
 		this.environment = properties.getProperty(PROPERTY_PREFIX + "environment", "sandbox"); // defaults to sandbox
 	}
 	
@@ -65,7 +68,14 @@ public class HyperswitchConfigProperties {
 			return getClient(environment, null);
 		}
 		return environment;
-	}	
+	}
+	
+	public String getProfileId(){
+		if (profileId == null || profileId.isEmpty()) {
+			return getClient(profileId, null);
+		}
+		return profileId;
+	}
 	
 	private String getClient(String envKey, String defaultValue) {
 		Map<String, String> env = System.getenv();

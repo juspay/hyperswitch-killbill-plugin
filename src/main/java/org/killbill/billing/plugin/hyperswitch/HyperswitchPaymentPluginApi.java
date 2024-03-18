@@ -101,6 +101,7 @@ public class HyperswitchPaymentPluginApi extends
         paymentsCreateRequest.confirm(true);
         paymentsCreateRequest.customerId(kbAccountId.toString());
         paymentsCreateRequest.offSession(true);
+        paymentsCreateRequest.profileId(hyperswitchConfigurationHandler.getConfigurable(context.getTenantId()).getProfileId());
         paymentsCreateRequest.setCaptureMethod(CaptureMethod.MANUAL);
         PaymentPluginStatus paymentPluginStatus = null;
         PaymentsResponse response = null;
@@ -216,10 +217,12 @@ public class HyperswitchPaymentPluginApi extends
             final Iterable<PluginProperty> properties, final CallContext context) throws PaymentPluginApiException {
         logger.info("[purchasePayment] calling purchase payment");
         HyperswitchResponsesRecord hyperswitchRecord = null;
+        String profileId = hyperswitchConfigurationHandler.getConfigurable(context.getTenantId()).getProfileId();
         PaymentsCreateRequest paymentsCreateRequest = new PaymentsCreateRequest();
         paymentsCreateRequest.setAmount(KillBillMoney.toMinorUnits(currency.toString(), amount));
         paymentsCreateRequest.setCurrency(convertCurrency(currency));
         paymentsCreateRequest.confirm(true);
+        paymentsCreateRequest.profileId(hyperswitchConfigurationHandler.getConfigurable(context.getTenantId()).getProfileId());
         paymentsCreateRequest.customerId(kbAccountId.toString());
         paymentsCreateRequest.offSession(true);
         PaymentPluginStatus paymentPluginStatus = null;
